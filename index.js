@@ -85,7 +85,7 @@ MeteorImportsPlugin.prototype.apply = function(compiler) {
     compiler.options.module.rules.push({
       meteorImports: true,
       test: new RegExp('.meteor/local/build/programs/web.browser/packages'),
-      use: [{loader: 'imports?this=>window'}]
+      use: [{loader: 'imports-loader?this=>window'}]
     });
 
     // Create an alias for each Meteor packages and a loader to extract its
@@ -107,7 +107,7 @@ MeteorImportsPlugin.prototype.apply = function(compiler) {
         compiler.options.module.rules.push({
           meteorImports: true,
           test: new RegExp('.meteor/local/build/programs/web.browser/' + pckge.path),
-          use: [{loader: 'exports?Package["' + packageName + '"]'}]
+          use: [{loader: 'exports-loader?Package["' + packageName + '"]'}]
         })
       }
     });
