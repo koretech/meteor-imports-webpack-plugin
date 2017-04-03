@@ -17,7 +17,7 @@ var excluded = new RegExp(config.exclude
 
 // Require the Meteor packages.
 manifest.forEach(function(pckge){
-  if (pckge.type === 'js' && !excluded.test(pckge.path))
+  if (pckge.type === 'js' && !excluded.test(pckge.path) && pckge.type !== 'asset')
     req('./' + pckge.path.replace('packages/', ''));
 });
 
