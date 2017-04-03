@@ -7,7 +7,7 @@ if (config.injectMeteorRuntimeConfig !== false) window.__meteor_runtime_config__
 
 // Create context to create a chunk for each Meteor package.
 var req = require.context(
-  'meteor-packages', false, /\.js$/);
+  'meteor-packages', true, /\.(js|css)$/);
 
 // Create regexp to exclude the packages we don't want.
 var excluded = new RegExp(config.exclude

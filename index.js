@@ -73,6 +73,14 @@ MeteorImportsPlugin.prototype.apply = function(compiler) {
       loader: 'imports?this=>window'
     });
 
+    // Add a loader for css files in meteor packages
+    compiler.options.module.loaders.push({
+      meteorImports: true,
+      test: /\.css$/,
+      include: [meteorPackages],
+      loader: 'style-loader!css-loader',
+    });
+
     // Add a resolveLoader to use the loaders from this plugin's own NPM
     // dependencies.
     if (compiler.options.resolveLoader.modulesDirectories.indexOf(meteorNodeModules) < 0) {
