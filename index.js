@@ -64,6 +64,25 @@ MeteorImportsPlugin.prototype.apply = function(compiler) {
 
     compiler.resolvers.loader.apply(new ModulesInRootPlugin('module', meteorNodeModules, 'resolve'));
 
+    // Add a loader to inject the meteor config in the meteor-imports require.
+    // TODO: this does not work under webpack2.1.0.beta23+
+    // https://github.com/webpack/webpack/issues/3084
+    compiler.options.module.rules.push({
+      meteorImports: true,
+      test: /meteor-config/,
+      use: [{
+        loader: 'json-string-loader',
+        query: 'json=' + JSON.stringify(self.config)
+      }]
+    });
+
+    // Add a loader to inject this as window in the meteor packages.
+    compiler.options.module.rules.push({
+      meteorImports: true,
+      test: new RegExp('.meteor/local/build/programs/web.browser/packages'),
+      use: [{loader: 'imports-loader?this=>window'}]
+    });
+
     // Create an alias for each Meteor packages and a loader to extract its
     // globals.
     var excluded = new RegExp(self.config.exclude
@@ -80,6 +99,11 @@ MeteorImportsPlugin.prototype.apply = function(compiler) {
           name: 'meteor/' + packageName,
           alias: path.join(meteorBuild, pckge.path),
         }, 'resolve'));
+        compiler.options.module.rules.push({
+          meteorImports: true,
+          test: new RegExp('.meteor/local/build/programs/web.browser/' + pckge.path),
+          use: [{loader: 'exports-loader?Package["' + packageName + '"]'}]
+        })
       }
     });
   });

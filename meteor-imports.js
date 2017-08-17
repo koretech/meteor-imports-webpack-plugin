@@ -1,5 +1,5 @@
-var manifest = require('meteor-build/program.json').manifest;
-var config = require('./meteor-config');
+var manifest = require('json-loader!meteor-build/program.json').manifest;
+var config = require('./meteor-config.json');
 
 if (config.injectMeteorRuntimeConfig !== false) window.__meteor_runtime_config__ = config;
 
